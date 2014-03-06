@@ -1,0 +1,115 @@
+using System.Collections.Generic;
+using System;
+
+public static class GlobalMembers
+{
+	// stdafx.h : include file for standard system include files,
+	// or project specific include files that are used frequently, but
+	// are changed infrequently
+	//
+
+
+
+	// Including SDKDDKVer.h defines the highest available Windows platform.
+
+	// If you wish to build your application for a previous Windows platform, include WinSDKVer.h and
+	// set the _WIN32_WINNT macro to the platform you wish to support before including SDKDDKVer.h.
+
+
+
+
+
+
+	// TODO: reference additional headers your program requires here
+
+
+
+	public const int nMinGreen = 7;
+	public const int nIntergreen = 5;
+
+	public const int nStages = 3;
+
+	public const int nIncrement = 1;
+
+
+	internal static void traverseStages(int remainingTime, int currentStage, int startStage, ref long nPatterns, List<CStageEvent> pattern, int iPattern)
+	{
+		while (remainingTime >= nIntergreen)
+		{
+			for (int iStage = 1; iStage <= nStages; iStage++)
+			{
+				if (iStage != currentStage)
+				{
+					pattern[iPattern].iStage = 0;
+					pattern[iPattern].nRunTime = nIntergreen;
+					pattern[iPattern + 1].iStage = iStage;
+					pattern[iPattern + 1].nRunTime = nMinGreen;
+
+					GlobalMembers.traverseStages(remainingTime - nIntergreen - nMinGreen, iStage, startStage, ref nPatterns, pattern, iPattern + 2);
+				}
+			}
+
+			pattern[iPattern - 1].nRunTime += nIncrement;
+
+			remainingTime -= nIncrement;
+		}
+
+		// Discard patterns where the start of the next cycle does not start with the same stage.
+		if (currentStage != startStage)
+			return;
+
+		// Correct for under or over run.
+		pattern[iPattern - 1].nRunTime += remainingTime;
+		while (pattern[iPattern - 1].nRunTime <= 0)
+		{
+			iPattern--;
+			pattern[iPattern - 1].nRunTime += pattern[iPattern].nRunTime;
+		}
+
+		// Print out this sequence
+		for (int i = 0; i < iPattern; i++)
+		{
+			Console.Write("{0},{1:D},", pattern[i].iStage == 0 ? '-' : pattern[i].iStage + 'A' - 1, pattern[i].nRunTime);
+		}
+		fputc('\n', stdout);
+
+		nPatterns++;
+	}
+
+	static void Main(string[] args)
+	{
+		long nPatterns = 0;
+
+		int nCycleTime = 80;
+		int nMaxChanges = (nCycleTime / (nMinGreen + nIntergreen) + 1) * 2;
+
+		List<CStageEvent> pattern = new List<CStageEvent>(nMaxChanges);
+
+		// Print CSV column headings.
+		for (int i = 0; i < nMaxChanges; i++)
+		{
+			fputs("Stage,Run Time,", stdout);
+		}
+		fputc('\n', stdout);
+
+		for (int iStage = 1; iStage <= nStages; iStage++)
+		{
+			pattern[0].iStage = iStage;
+			pattern[0].nRunTime = nMinGreen;
+			GlobalMembers.traverseStages(nCycleTime - nMinGreen, iStage, iStage, ref nPatterns, pattern, 1);
+		}
+
+		Console.Write("Number of possible stage sequences: {0:D}\n", nPatterns);
+	}
+}
+
+public class CStageEvent
+{
+	public CStageEvent()
+	{
+		this.iStage = 0;
+		this.nRunTime = 0;
+	}
+	public int iStage;
+	public int nRunTime;
+}
