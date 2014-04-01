@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 
 namespace ConsoleApplication1
 {
@@ -15,9 +16,30 @@ namespace ConsoleApplication1
             ParamicsStageBuilder PSB = new ParamicsStageBuilder();
             Stage_Generator SG = new Stage_Generator();
             Optimization_Problem OP = new Optimization_Problem();
+            Optimization_Problem_Version_2 OP2 = new Optimization_Problem_Version_2();
+            Initialising_Genome IG = new Initialising_Genome();
+            Mutate MU = new Mutate();
+            FixedVariables FV = new FixedVariables();
 
+            for (int i = FV.StepsClimbed; i < 101; i+=100)         //This varies the number of mutations by increasing it by 5 (starting at 5 up to 50)
+            {
+                StreamWriter sw = new StreamWriter(@"outputforhillclimber" + FV.StartingSeeds + "seeds," + i + "steps," + FV.MutationsAroundAPoint + "Mutations" + ".csv");
+                for (int j = 0; j < 100; j++)                       //This runs the whole model 100 times
+                {
+                    Runner Run = new Runner();
+                    sw.WriteLine(Run.RunAlgorithm(FV.StartingSeeds, i, FV.MutationsAroundAPoint) + ",");
+                }
+                Console.WriteLine(i + "Finished");
+                sw.Close();
+            }
+
+            //MU.MutateCyclePlan(IG.GenerateCyclePlan());
+            //IG.GenerateCyclePlan();
+            //OP.EveryPossibilityV3();
+            //OP.RunnerFunction("Timestep10.csv");    //This runs the function
+            //OP.RunnerFunction("UsableStages - 5 Timesteps and 4 Stages.csv");
             //OP.RunnerFunction("UsableStages - 10 Timesteps and 4 Stages.csv");    //This runs the function
-            OP.GenerateCSVFile("UsableStages - 10 Timesteps and 4 Stages.csv");                       //This generates the file showing all feasible cycle plans
+            //OP.GenerateCSVFile("UsableStages - 20 Timesteps and 4 Stages.csv");                       //This generates the file showing all feasible cycle plans
             
             //SG.TwoPhaseStages();
             //SG.ThreePhaseStages(SG.TwoPhaseStages());

@@ -8,10 +8,10 @@ namespace ConsoleApplication1
 {
     class Optimization_Problem
     {
-        double[] Phase1 = { 3, 1, 2, 7 };
-        double[] Phase2 = { 2, 1.5, 2, 7 };
-        double[] Phase3 = { 6, 2, 3, 7 };
-        double[] Phase4 = { 7, 2.5, 3, 7 };
+        double[] Phase1 = { 13, 3, 5, 1 };
+        double[] Phase2 = { 32, 1.5, 2, 1 };
+        double[] Phase3 = { 16, 2, 3, 3 };
+        double[] Phase4 = { 20, 2.5, 4, 1 };
         //double [] will contain [0] = queue length, [1] = arrival rate, [2] = discharge rate, [3] = minimum green time
 
         int NumberOfStages = 4;             //In this simple scenario, Phase1, etc are considered as Stages
@@ -88,7 +88,70 @@ namespace ConsoleApplication1
             return TempList;
         }
 
-        private List<int[]> EveryPossibilityV2()
+        public void EveryPossibilityV3()
+        {
+            List<int[]> AnswerList = new List<int[]>();
+            int[] TempList = new int[NumberOfTimeSteps];
+            List<string> Filenames = new List<string>();
+
+            for (int i = 1; i < NumberOfTimeSteps + 1; i++)
+            {
+                string FilenameBits = "Timestep" + Convert.ToString(i) + ".csv";
+                Filenames.Add(FilenameBits);
+            }
+
+            //Write the first file independently so that all other timesteps can be built upon the same logic
+            StreamWriter FirstFile = new StreamWriter(@Filenames[0]);
+            for (int Stage1 = 1; Stage1 < NumberOfStages + 1; Stage1++)
+            {
+                TempList[0] = Stage1;
+                foreach (int Stage in TempList)
+                {
+                    FirstFile.Write(Stage + ",");
+                }
+                FirstFile.WriteLine();
+            }
+            FirstFile.Close();
+
+            for (int Timestep = 1; Timestep < NumberOfTimeSteps; Timestep++)
+            {
+                StreamReader sr = new StreamReader(@Filenames[Timestep - 1]);
+                StreamWriter sw = new StreamWriter(@Filenames[Timestep]);
+
+                string Line;
+
+                // Read the previous file line by line
+                while ((Line = sr.ReadLine()) != null)
+                {
+                    int[] TempCyclePlan = new int[NumberOfTimeSteps];
+                    int TempCounter = 0;
+                    foreach (string Stage in Line.Split(','))
+                    {
+                        if (Stage != "")
+                        {
+                            TempCyclePlan[TempCounter] = Convert.ToInt16(Stage);
+                            TempCounter++;
+                        }
+                    }
+                    for (int StageX = 1; StageX < NumberOfStages + 1; StageX++)
+                    {
+                        TempCyclePlan[Timestep] = StageX;
+                        foreach (int Stage in TempCyclePlan)
+                        {
+                            sw.Write(Stage + ",");
+                        }
+                        sw.WriteLine();
+                    }
+                }
+                sr.Close();
+                Console.WriteLine("Filename" + Timestep + " Complete");
+                sw.Close(); 
+
+            }
+        }
+
+
+        public List<int[]> EveryPossibilityV2()
         {
             List<int[]> AnswerList = new List<int[]>();
             int[] TempList = new int[NumberOfTimeSteps];
@@ -103,7 +166,7 @@ namespace ConsoleApplication1
             List<int[]> TempStage8 = new List<int[]>();
             List<int[]> TempStage9 = new List<int[]>();
             List<int[]> TempStage10 = new List<int[]>();
-            /*List<int[]> TempStage11 = new List<int[]>();
+            List<int[]> TempStage11 = new List<int[]>();
             List<int[]> TempStage12 = new List<int[]>();
             List<int[]> TempStage13 = new List<int[]>();
             List<int[]> TempStage14 = new List<int[]>();
@@ -112,7 +175,7 @@ namespace ConsoleApplication1
             List<int[]> TempStage17 = new List<int[]>();
             List<int[]> TempStage18 = new List<int[]>();
             List<int[]> TempStage19 = new List<int[]>();
-            List<int[]> TempStage20 = new List<int[]>();*/
+            List<int[]> TempStage20 = new List<int[]>();
 
             for (int Stage1 = 1; Stage1 < NumberOfStages + 1; Stage1++)
             {
@@ -212,7 +275,7 @@ namespace ConsoleApplication1
             }
             Console.WriteLine("TempStage10 Complete = " + TempStage10.Count());
 
-            /*foreach (int[] Stage in TempStage10)
+            foreach (int[] Stage in TempStage10)
             {
                 for (int StageX = 1; StageX < NumberOfStages + 1; StageX++)
                 {
@@ -320,7 +383,7 @@ namespace ConsoleApplication1
                     TempStage20.Add(TempList);
                 }
             }
-            Console.WriteLine("TempStage20 Complete = " + TempStage20.Count());*/
+            Console.WriteLine("TempStage20 Complete = " + TempStage20.Count());
 
             //return TempStage20;
             return TempStage10;
@@ -677,7 +740,9 @@ namespace ConsoleApplication1
 
             int Ticker = 0;
             int Ticker2 = 0;
-            
+
+            //StreamWriter sw = new StreamWriter(@"output4.csv");   //This is for generating a csv file with all stage options with their corresponding performance value 
+                                                                    //N.B. There are other parts of the code you will need to unblock for this to work...
             foreach (int[] CyclePlan in EveryPossibleCyclePlan)
             {
                 Ticker++;
@@ -696,11 +761,21 @@ namespace ConsoleApplication1
                         break;
                     }
                 }
+
+                
+                /*foreach (int item in CyclePlan)
+                {
+                    sw.Write(item + ",");
+                }
+                sw.Write(TempDelayTotal);
+                sw.WriteLine();*/
+
                 if (TempDelayTotal < LeastDelay)  //Currently this ignores any stage with the same amount of delay...
                 {
                     LeastDelay = ObjectCopier.Clone(TempDelayTotal);
                     BestCyclePlan = ObjectCopier.Clone(CyclePlan);
                 }
+                
                 if (Ticker == 10000)
                 {
                     Ticker2++;
@@ -709,6 +784,7 @@ namespace ConsoleApplication1
                 }
             }
 
+            //sw.Close();
             Console.Write("The best cycle plan is: ");
             foreach (int stage in BestCyclePlan)
             {

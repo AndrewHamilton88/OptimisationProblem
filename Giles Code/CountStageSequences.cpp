@@ -4,9 +4,9 @@
 const int nMinGreen = 7;
 const int nIntergreen = 5;
 
-const int nStages = 3;
+const int nStages = 4;
 
-const int nIncrement = 2;
+const int nIncrement = 1;
 
 static void traverseStages(int remainingTime, int currentStage, __int64& nSequencePatterns)
 {
@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
 {
     __int64 nSequencePatterns = 1;
 
-    traverseStages(120, 1, nSequencePatterns); 
+    traverseStages(100, 1, nSequencePatterns); 
 
     printf("Number of possible stage sequences: %lld\n", nSequencePatterns);
 }

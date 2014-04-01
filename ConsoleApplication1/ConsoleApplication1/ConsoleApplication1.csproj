@@ -44,15 +44,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AllStages.cs" />
+    <Compile Include="FinalFunction.cs" />
+    <Compile Include="FixedVariables.cs" />
+    <Compile Include="Initialising Genome.cs" />
+    <Compile Include="Mutate.cs" />
+    <Compile Include="Optimization Problem Version 2.cs" />
     <Compile Include="CyclePlanGenerator.cs" />
     <Compile Include="ObjectCopier.cs" />
     <Compile Include="Optimization Problem.cs" />
     <Compile Include="ParamicsStageBuilder.cs" />
+    <Compile Include="Performance.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queue Lengths.cs" />
+    <Compile Include="Runner.cs" />
     <Compile Include="Stage_Generator.cs" />
     <Compile Include="TestClass.cs" />
     <Compile Include="UsefulStages.cs" />
+    <Compile Include="WriteToFile.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
