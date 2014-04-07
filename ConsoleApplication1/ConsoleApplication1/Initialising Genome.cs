@@ -16,7 +16,7 @@ namespace ConsoleApplication1
         
         int[] IntergreenAndLength = new int[2]; //This is the Intergreen Number followed by the Stage Length
 
-        int[] InitialCyclePlan = new int[MaxCycleTime];         //Final list will look like [1,1,1,1,1,1,1,9,9,9,9,9...]   so every second has a value
+        //int[] InitialCyclePlan = new int[MaxCycleTime];         //Final list will look like [1,1,1,1,1,1,1,9,9,9,9,9...]   so every second has a value
         List<int[]> InitialCyclePlanList = new List<int[]>();   //Final list will look like [(1,10),(9,5),(2,15),(9,5),...]
 
         Random RandomGenerator = new Random();
@@ -33,6 +33,7 @@ namespace ConsoleApplication1
 
         public List<int[]> GenerateCyclePlan()     //This will populate "InitialCyclePlan" with a random stage order and random stage lengths
         {
+            InitialCyclePlanList.Clear();
             int TimeUsed = 0;
             //List<int> TempCyclePlan = new List<int>();
             int PreviousStage = 0;

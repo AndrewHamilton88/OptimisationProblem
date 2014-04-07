@@ -44,6 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AllStages.cs" />
+    <Compile Include="Answer.cs" />
+    <Compile Include="RunnerSingleStage.cs" />
+    <Compile Include="SingleStageInitialGenerator.cs" />
     <Compile Include="FinalFunction.cs" />
     <Compile Include="FixedVariables.cs" />
     <Compile Include="Initialising Genome.cs" />
@@ -57,7 +60,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queue Lengths.cs" />
-    <Compile Include="Runner.cs" />
+    <Compile Include="RunnerCyclePlan.cs" />
     <Compile Include="Stage_Generator.cs" />
     <Compile Include="TestClass.cs" />
     <Compile Include="UsefulStages.cs" />

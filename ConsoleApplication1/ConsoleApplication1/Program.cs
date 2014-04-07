@@ -20,18 +20,58 @@ namespace ConsoleApplication1
             Initialising_Genome IG = new Initialising_Genome();
             Mutate MU = new Mutate();
             FixedVariables FV = new FixedVariables();
+            SingleStageInitialGenerator SSIG = new SingleStageInitialGenerator();
+            RunnerSingleStage RunSS = new RunnerSingleStage();
 
-            for (int i = FV.StepsClimbed; i < 101; i+=100)         //This varies the number of mutations by increasing it by 5 (starting at 5 up to 50)
+            
+            /*Answer FinalAnswer = RunSS.RunAlgorithm(2, 1, 2, RunSS.PopulateStages(), 0);
+            Console.Read();*/
+
+            /*FinalFunction FF = new FinalFunction();
+            Console.WriteLine(FF.RunnerFunction(FF.TestFunction(),99999,RunSS.PopulateStages()));
+            Console.Read();*/
+
+            RunnerCyclePlan Run = new RunnerCyclePlan();
+            for (int i = FV.MutationsAroundAPoint; i < 101; i += 10)
+            {
+                Run.RunAlgorithm(FV.StartingSeeds, FV.StepsClimbed, i, Run.PopulateStages());
+            }
+            
+            //Console.Read();
+
+            /*StreamWriter sw = new StreamWriter(@"outputforhillclimber" + FV.StartingSeeds + "seeds," + FV.StepsClimbed + "steps," + FV.MutationsAroundAPoint + "Mutations" + ".csv");
+            for (int j = 0; j < 10; j++)                       //This runs the whole model 100 times
+            {
+                RunnerCyclePlan Run = new RunnerCyclePlan();
+                sw.WriteLine(Run.RunAlgorithm(FV.StartingSeeds, FV.StepsClimbed, FV.MutationsAroundAPoint, Run.PopulateStages()) + ",");
+                Console.WriteLine(j + "Finished");
+            }
+            sw.Close();*/
+
+
+            /*StreamWriter sw = new StreamWriter(@"outputforhillclimber" + FV.StartingSeeds + "seeds," + "Incremental_Steps," + FV.MutationsAroundAPoint + "Mutations" + ".csv");
+            for (int i = FV.StepsClimbed; i < 1001; i += 10)         //This varies the number of mutations by increasing it by 5 (starting at 5 up to 50)
+            {
+                for (int j = 0; j < 1; j++)                       //This runs the whole model 100 times
+                {
+                    RunnerCyclePlan Run = new RunnerCyclePlan();
+                    sw.WriteLine(FV.StartingSeeds + "Seeds," + i + "Steps," + FV.MutationsAroundAPoint + "Mutations," + Run.RunAlgorithm(FV.StartingSeeds, i, FV.MutationsAroundAPoint, Run.PopulateStages()) + ",");
+                }
+                Console.WriteLine(i + "Finished");
+            }
+            sw.Close();*/
+
+            /*for (int i = FV.StepsClimbed; i < 101; i+=100)         //This varies the number of mutations by increasing it by 5 (starting at 5 up to 50)
             {
                 StreamWriter sw = new StreamWriter(@"outputforhillclimber" + FV.StartingSeeds + "seeds," + i + "steps," + FV.MutationsAroundAPoint + "Mutations" + ".csv");
                 for (int j = 0; j < 100; j++)                       //This runs the whole model 100 times
                 {
-                    Runner Run = new Runner();
-                    sw.WriteLine(Run.RunAlgorithm(FV.StartingSeeds, i, FV.MutationsAroundAPoint) + ",");
+                    RunnerCyclePlan Run = new RunnerCyclePlan();
+                    sw.WriteLine(Run.RunAlgorithm(FV.StartingSeeds, i, FV.MutationsAroundAPoint, Run.PopulateStages()) + ",");
                 }
                 Console.WriteLine(i + "Finished");
                 sw.Close();
-            }
+            }*/
 
             //MU.MutateCyclePlan(IG.GenerateCyclePlan());
             //IG.GenerateCyclePlan();
